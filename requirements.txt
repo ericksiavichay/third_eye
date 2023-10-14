@@ -10,4 +10,6 @@ transformers==4.34.0
 uvicorn==0.23.2
 uvloop==0.18.0
 ultralytics
+streamlit
+elevenlabs
 
