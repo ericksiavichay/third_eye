@@ -1,0 +1,12 @@
+fastapi==0.103.2
+huggingface-hub==0.17.3
+numpy==1.26.0
+Pillow==10.0.1
+python-multipart==0.0.6
+torch==1.12.1+cu102
+torchaudio==0.12.1+cu102
+torchvision==0.13.1+cu102
+transformers==4.34.0
+uvicorn==0.23.2
+uvloop==0.18.0
+
