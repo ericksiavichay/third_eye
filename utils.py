@@ -3,6 +3,7 @@ import numpy as np
 import requests
 import time
 from PIL import Image
+from transformers import pipeline
 from transformers import Pix2StructForConditionalGeneration, Pix2StructProcessor
 from fastapi.responses import JSONResponse
 from io import BytesIO
@@ -10,10 +11,13 @@ from io import BytesIO
 # from ultralytics import YOLO
 
 app = FastAPI()
-model = Pix2StructForConditionalGeneration.from_pretrained(
-    "google/pix2struct-textcaps-base"
-).to("cuda")
-processor = Pix2StructProcessor.from_pretrained("google/pix2struct-textcaps-base")
+# model = Pix2StructForConditionalGeneration.from_pretrained(
+#     "google/pix2struct-textcaps-base"
+# ).to("cuda")
+# processor = Pix2StructProcessor.from_pretrained("google/pix2struct-textcaps-base")
+
+pipe = pipeline("image-to-text", model="nlpconnect/vit-gpt2-image-captioning")
+
 # image_to_text = YOLO("yolov8n.pt")
 
 
@@ -66,13 +70,14 @@ processor = Pix2StructProcessor.from_pretrained("google/pix2struct-textcaps-base
 def model_inference(input_image, input_prompt=""):
     image = input_image
 
-    inputs = processor(images=image, return_tensors="pt").to("cuda")
+    # inputs = processor(images=image, return_tensors="pt").to("cuda")
     start_time = time.time()
-    predictions = model.generate(**inputs)
+    # predictions = model.generate(**inputs)
     # yolo_returns = yolo_single_frame(image)
     end_time = time.time()
+    response = pipe(image)
 
-    response = processor.decode(predictions[0], skip_special_tokens=True)
+    # response = processor.decode(predictions[0], skip_special_tokens=True)
     print(response)
     print(end_time - start_time)
-    return response
+    return response[0]['generated_text']
