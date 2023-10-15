@@ -30,7 +30,7 @@ def main():
 
     try:
         image_response = requests.post(
-            "http://9ob3xkj0pb.loclx.io/uploadfile", files=image_files
+            "http://biksjzk4nu.loclx.io/uploadfile", files=image_files
         )
         image_response.raise_for_status()
         response_json = image_response.json()

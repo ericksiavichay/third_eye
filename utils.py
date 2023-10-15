@@ -150,7 +150,7 @@ def get_yolo_outputs(image):
             confidence = scores[class_id]
             label = str(classes[class_id])
 
-            if confidence > 0.7:
+            if confidence > 0.9:
                 # center_x = int(detection[0] * width)
                 # center_y = int(detection[1] * height)
                 # w = int(detection[2] * width)
