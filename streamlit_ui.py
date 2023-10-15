@@ -15,7 +15,7 @@ def main():
 
     # Display image provided by user
     if img_file_buffer is not None:
-        st.image(img_file_buffer, caption="Uploaded Image.", use_column_width=True)
+        st.image(img_file_buffer, caption="Take screenshot.", use_column_width=True)
 
         # Convert to bytes and prepare to send to API
         byte_img = img_file_buffer.getvalue()

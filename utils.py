@@ -9,13 +9,17 @@ from io import BytesIO
 import cv2
 from ultralytics import YOLO
 
-
 app = FastAPI()
 model = Pix2StructForConditionalGeneration.from_pretrained(
     "google/pix2struct-textcaps-base"
 ).to("cuda")
 processor = Pix2StructProcessor.from_pretrained("google/pix2struct-textcaps-base")
 image_to_text = YOLO("yolov8n.pt")
+
+
+def yolo_single_frame(frame):
+    some_return = model.predict(frame, show=True, stream=True)
+    return some_return
 
 
 def stream_object_detection():
@@ -58,14 +62,6 @@ def stream_object_detection():
             cv2.destroyAllWindows()
             return generated_text, frame
 
-        # Exit loop when 'q' is pressed
-        elif key == ord("q"):
-            break
-
-    # Release the webcam and close all windows
-    cap.release()
-    cv2.destroyAllWindows()
-
 
 def model_inference(input_image, input_prompt=""):
     image = input_image
@@ -73,18 +69,10 @@ def model_inference(input_image, input_prompt=""):
     inputs = processor(images=image, return_tensors="pt").to("cuda")
     start_time = time.time()
     predictions = model.generate(**inputs)
+    yolo_returns = yolo_single_frame(image)
     end_time = time.time()
 
     response = processor.decode(predictions[0], skip_special_tokens=True)
-    print(response)
+    print(response, yolo_returns)
     print(end_time - start_time)
     return response
-
-
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
-    content = await file.read()
-    image = Image.open(BytesIO(content))
-    print(content)
-    text_result = model_inference(image)
-    return JSONResponse(content={"text": text_result}, status_code=200)
