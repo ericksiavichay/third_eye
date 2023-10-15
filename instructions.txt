@@ -1,0 +1,43 @@
+
+
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+
+
+git clone https://github.com/Vision-CAIR/MiniGPT-4.git
+cd MiniGPT-4
+conda env create -f environment.yml
+conda activate minigpt4
+
+Install git lfs
+git lfs install
+git clone https://huggingface.co/Vision-CAIR/vicuna
+
+minigpt4/configs/models/minigpt4_vicuna0.yaml Change path of llama_model in line 18 to the above downloaded folder directory
+
+pip install gdown
+gdown --id 1RY9jV0dyqLX-o38LrumkKRh6Jtaop58R -O prerained_minigpt4_7b.pth
+
+eval_configs/minigpt4_eval.yaml Change path to above file in line 8
+
+You are all set to run the demo file using this command
+
+python demo.py --cfg-path eval_configs/minigpt4_eval.yaml  --gpu-id 0
+
+Verify if its working till now.
+
+Copy paster cloud_api_minigpt.py file from our repo
+and then MiniGPT-4/minigpt4/common/config.py Change Line 25 and Line 27 with this
+
+user_config = self._build_opt_list("+")
+ 
+config = OmegaConf.load('eval_configs/minigpt4_eval.yaml')
+
+Run the server with this, save the file as test_Api.py, run uvicorn test_api:app --port 8080 --reload
+
+Now your minigpt is hosted locally
+
+create a ngrok acc and host it globally
+Its done! Woooohoooo!
